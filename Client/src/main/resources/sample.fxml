@@ -1,0 +1,58 @@
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+<?import java.net.URL?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ButtonBar?>
+<VBox fx:controller="client.Controller"
+      xmlns:fx="http://javafx.com/fxml" alignment="center" >
+
+
+    <HBox fx:id="authPanel">
+
+        <TextField fx:id="loginField" HBox.hgrow="ALWAYS" promptText="login"/>
+        <PasswordField fx:id="passwordField" HBox.hgrow="ALWAYS" promptText="password"/>
+        <Button text="Auth" onAction="#tryToAuth" minWidth="100"/>
+<!--        <Button text="reg" onAction="#tryToReg" minWidth="100"/>-->
+
+
+    </HBox>
+
+    <HBox VBox.vgrow="ALWAYS" >
+
+        <VBox VBox.vgrow="ALWAYS" >
+
+            <HBox VBox.vgrow="ALWAYS">
+                        <Button text="Copy" onAction="#tryToCopy" minWidth="100"/>
+                        <Button text="Remove" onAction="#tryToRemove" minWidth="100"/>
+                        <Button text="Refresh" onAction="#tryToRefresh" minWidth="100"/>
+
+            </HBox>
+            <HBox VBox.vgrow="ALWAYS" minWidth="400">
+            <ListView fx:id="clientFileList" HBox.hgrow="ALWAYS" /></HBox>
+
+        </VBox>
+
+
+        <VBox VBox.vgrow="ALWAYS">
+
+            <HBox VBox.vgrow="ALWAYS">
+                <Button text="Copy" onAction="#tryToCopyServer" minWidth="100"/>
+                <Button text="Remove" onAction="#tryToRemoveServer" minWidth="100"/>
+                <Button text="Refresh" onAction="#tryToRefreshServer" minWidth="100"/>
+
+            </HBox>
+            <HBox VBox.vgrow="ALWAYS" minWidth="400">
+            <ListView fx:id="serverFileList" HBox.hgrow="ALWAYS" /></HBox>
+        </VBox>
+
+
+    </HBox>
+
+</VBox>
+
+
+
