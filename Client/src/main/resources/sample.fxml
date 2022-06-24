@@ -21,7 +21,7 @@
 
     </HBox>
 
-    <HBox VBox.vgrow="ALWAYS" >
+    <HBox VBox.vgrow="ALWAYS" fx:id="workPanel">
 
         <VBox VBox.vgrow="ALWAYS" >
 
@@ -31,8 +31,12 @@
                         <Button text="Refresh" onAction="#tryToRefresh" minWidth="100"/>
 
             </HBox>
+            <HBox>
+                <TextField fx:id="statementClient" HBox.hgrow="ALWAYS" editable="false"/>
+            </HBox>
             <HBox VBox.vgrow="ALWAYS" minWidth="400">
-            <ListView fx:id="clientFileList" HBox.hgrow="ALWAYS" /></HBox>
+
+            <ListView fx:id="clientFileList" HBox.hgrow="ALWAYS" onMouseClicked="#clickClientFileList"/></HBox>
 
         </VBox>
 
@@ -44,6 +48,9 @@
                 <Button text="Remove" onAction="#tryToRemoveServer" minWidth="100"/>
                 <Button text="Refresh" onAction="#tryToRefreshServer" minWidth="100"/>
 
+            </HBox>
+            <HBox>
+                <TextField fx:id="statementServer" HBox.hgrow="ALWAYS" />
             </HBox>
             <HBox VBox.vgrow="ALWAYS" minWidth="400">
             <ListView fx:id="serverFileList" HBox.hgrow="ALWAYS" /></HBox>

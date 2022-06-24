@@ -10,7 +10,10 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.ListView;
+import message.AuthMessage;
 import message.FileContentMessage;
 import message.FileRequestMessage;
 import message.Message;
@@ -19,13 +22,19 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.net.URL;
 
 
 public class Client {
 
+
+
     private SocketChannel channel;
+    private Controller controller;
+
 
     public Client() {
+
         new Thread(()-> {
 
         final NioEventLoopGroup group = new NioEventLoopGroup(1);
@@ -47,39 +56,37 @@ public class Client {
                                         @Override
                                         public void channelActive(ChannelHandlerContext ctx) throws Exception {
 
-//                                                AuthMessage authMessage = new AuthMessage();
-//
-//                                                authMessage.setLogin(String.format("%s", loginField.getText().trim()));
-//                                                authMessage.setPassword(String.format("%s", passwordField.getText().trim()));
-//                                                passwordField.clear();
-//                                                ctx.writeAndFlush(authMessage);
-
-
-
-
                                         }
 
                                         @Override
-                                        protected void channelRead0(ChannelHandlerContext ctx, Message msg) throws FileNotFoundException {
+                                        protected void channelRead0(ChannelHandlerContext ctx, Message msg) throws IOException {
 
-
-  //                                              if (msg instanceof AuthMessage){
-
-                                        //        }
+                                                if (msg instanceof AuthMessage){
+                                                    setAuthForController();
+                                                }
 
                                                 System.out.println("receive msg " + msg);
 
 
                                                 if (msg instanceof FileContentMessage) {
 
+
                                                     FileContentMessage fcm = (FileContentMessage) msg;
-                                                    String receiver = fcm.getPath();
+                                                    String receiver = fcm.getPathFrom();
                                                     String name = receiver.substring(receiver.lastIndexOf("\\")+1, receiver.length());
-                                                    try (final RandomAccessFile accessFile = new RandomAccessFile("Data\\" + name, "rw")) {
+                                                    try (final RandomAccessFile accessFile = new RandomAccessFile(fcm.getPathTo() + name, "rw")) {
                                                         accessFile.seek(fcm.getStartPosition());
                                                         accessFile.write(fcm.getContent());
                                                         if (fcm.isLast()) {
                                       //                      ctx.close();
+                                                            Platform.runLater(new Runnable() {
+
+                                                                @Override
+                                                                public void run() {
+                                                                    Control.getController().tryToRefreshAll();
+                                                                }
+                                                            });
+
                                                         }
 
                                                     } catch (IOException e) {
@@ -107,9 +114,17 @@ public class Client {
         }).start();
     }
 
-    public void sendFileClient(FileRequestMessage frm){
+    public void sendMessage(Message message){
+        channel.writeAndFlush(message);
+    }
+
+    public void sendFileForCopy(FileRequestMessage frm){
         channel.writeAndFlush(frm);
     }
 
+    public void setAuthForController() throws IOException {
 
+        Control.getController().tryToAuth();
+
+    }
 }

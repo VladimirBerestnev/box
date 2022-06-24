@@ -46,6 +46,7 @@ public class FirstServerHandler extends SimpleChannelInboundHandler<Message> {
             } else {
                 ErrorMessage em = new ErrorMessage();
                 ctx.writeAndFlush(em);
+                connection.close();
             }
 
         }
@@ -53,10 +54,11 @@ public class FirstServerHandler extends SimpleChannelInboundHandler<Message> {
         if (msg instanceof FileRequestMessage) {
             FileRequestMessage frm = (FileRequestMessage) msg;
             if (accessFile == null) {
-                final File file = new File(frm.getPath());
-                String path = frm.getPath();
+                final File file = new File(frm.getPathFrom());
+                String pathTo = frm.getPathTo();
+                String pathFrom = frm.getPathFrom();
                 accessFile = new RandomAccessFile(file, "r");
-                sendfile(ctx, path);
+                sendfile(ctx, pathTo, pathFrom);
             }
         }
     }
@@ -76,7 +78,7 @@ public class FirstServerHandler extends SimpleChannelInboundHandler<Message> {
     }
 
 
-    private void sendfile(ChannelHandlerContext ctx, String path) throws IOException {
+    private void sendfile(ChannelHandlerContext ctx, String pathTo, String pathFrom) throws IOException {
         if (accessFile != null) {
 
                 final byte[] fileContent;
@@ -87,7 +89,8 @@ public class FirstServerHandler extends SimpleChannelInboundHandler<Message> {
                     fileContent = new byte[(int) available];
                 }
                 final FileContentMessage message = new FileContentMessage();
-                message.setPath(path);
+                message.setPathTo(pathTo);
+                message.setPathFrom(pathFrom);
                 message.setStartPosition(accessFile.getFilePointer());
                 accessFile.read(fileContent);
                 message.setContent(fileContent);
@@ -97,7 +100,7 @@ public class FirstServerHandler extends SimpleChannelInboundHandler<Message> {
                 @Override
                 public void operationComplete(ChannelFuture channelFuture) throws Exception {
                     if(!last){
-                    sendfile(ctx, path);
+                    sendfile(ctx, pathTo, pathFrom);
                 }}
             });
                 if (last){

@@ -2,14 +2,23 @@ package message;
 
 public class FileContentMessage extends Message{
 
-    private String path;
+    private String pathTo;
+    private String pathFrom;
 
-    public String getPath() {
-        return path;
+    public String getPathTo() {
+        return pathTo;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setPathTo(String pathTo) {
+        this.pathTo = pathTo;
+    }
+
+    public String getPathFrom() {
+        return pathFrom;
+    }
+
+    public void setPathFrom(String pathFrom) {
+        this.pathFrom = pathFrom;
     }
 
     private long startPosition;
