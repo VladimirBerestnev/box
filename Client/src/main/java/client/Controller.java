@@ -45,7 +45,7 @@ public class Controller implements Initializable {
     public PasswordField passwordField;
 
     private boolean authenticated;
-    String clientPath = ("C:\\geekbrains\\");
+    String clientPath = ("C:\\");
     String serverPath = ("Data\\");
 
     @Override
